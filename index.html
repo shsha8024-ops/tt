@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🧾 توليد JSON الحمولة (ColumnsNameAdd + NDCid)</title>
+<title>🧮 مُولِّد Viewable_data3 (توليد مخطط الحقول)</title>
 <style>
 body {
   font-family: "Noto Naskh Arabic", sans-serif;
+  direction: rtl;
   background: #f9fafb;
   color: #111;
   margin: 20px;
-  direction: rtl;
 }
-h1{text-align:center}
-form {
-  max-width: 700px;
+h1{text-align:center;margin-bottom:20px}
+form, .output {
+  max-width: 900px;
   margin: auto;
   background: #fff;
   padding: 20px;
@@ -22,26 +22,36 @@ form {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 label{display:block;margin-top:10px;font-weight:600}
-input,select {
+input,select,textarea {
   width: 100%;
   padding: 8px;
   margin-top: 6px;
-  font-size: 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  font-size: 15px;
   box-sizing: border-box;
 }
 button {
-  padding: 10px 16px;
-  font-size: 15px;
-  margin-top: 20px;
+  padding: 10px 14px;
   background: #2563eb;
   color: #fff;
   border: none;
   border-radius: 6px;
+  margin-top: 12px;
   cursor: pointer;
 }
-button:hover { background: #1e40af }
+button:hover {background:#1e40af}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+th {background:#f3f4f6}
 pre {
   background: #f5f5f5;
   padding: 10px;
@@ -52,82 +62,101 @@ pre {
 </head>
 <body>
 
-<h1>🚚 توليد JSON الحمولة</h1>
+<h1>🧮 مُولّد الحقول Viewable_data3</h1>
 
-<form id="cargoForm">
-  <label>🔹 اسم السيطرة</label>
-  <select id="chekpointname" required>
-    <option value="">— اختر السيطرة —</option>
-    <option>سيطرة دارمان</option>
-    <option>سيطرة جيمين</option>
-    <option>سيطرة السد</option>
-    <option>سيطرة باوه محمود</option>
+<form id="fieldForm">
+  <label>🔹 اسم الحقل (ColumnName)</label>
+  <input type="text" id="name" placeholder="مثال: CompanyNameProject" required>
+
+  <label>🔹 نوع الحقل (ColumnType)</label>
+  <select id="type">
+    <option value="text">text - نص</option>
+    <option value="number">number - رقم</option>
+    <option value="date">date - تاريخ</option>
+    <option value="dropdownlist">dropdownlist - قائمة منسدلة</option>
   </select>
 
-  <label>🔹 اسم السائق</label>
-  <input type="text" id="DriverName" placeholder="اكتب اسم السائق" required>
+  <label>🔹 التسمية العربية (label)</label>
+  <input type="text" id="label" placeholder="مثال: اسم الشركة / المشروع" required>
 
-  <label>🔹 رقم العجلة</label>
-  <input type="text" id="VehicleNumber" placeholder="مثال: 9987" required>
+  <label>🔹 قيم القائمة (اختياري إذا كان النوع dropdownlist)</label>
+  <input type="text" id="contentList" placeholder="مثال: طن, عدد, لتر">
 
-  <label>🔹 محافظة تسجيل العجلة</label>
-  <select id="VehicleRegistrationGovernorate" required>
-    <option value="">— اختر المحافظة —</option>
-    <option>بغداد</option><option>اربيل</option><option>سليمانية</option>
-    <option>دهوك</option><option>نينوى</option><option>كركوك</option>
-    <option>صلاح الدين</option><option>ديالى</option><option>الانبار</option>
-    <option>بابل</option><option>واسط</option><option>الديوانية</option>
-    <option>كربلاء</option><option>النجف</option><option>المثنى</option>
-    <option>ميسان</option><option>ذي قار</option><option>البصرة</option>
-  </select>
-
-  <label>🔹 الوزن / الكمية</label>
-  <input type="number" id="WeightQuantity" placeholder="اكتب الكمية أو الوزن" required>
-
-  <label>🔹 الوجهة النهائية / المحافظة</label>
-  <select id="FinalDestinationGovernorate" required>
-    <option value="">— اختر المحافظة —</option>
-    <option>بغداد</option><option>اربيل</option><option>سليمانية</option>
-    <option>دهوك</option><option>نينوى</option><option>كركوك</option>
-    <option>صلاح الدين</option><option>ديالى</option><option>الانبار</option>
-    <option>بابل</option><option>واسط</option><option>الديوانية</option>
-    <option>كربلاء</option><option>النجف</option><option>المثنى</option>
-    <option>ميسان</option><option>ذي قار</option><option>البصرة</option>
-  </select>
-
-  <label>🏢 NDCid (رمز الشركة)</label>
-  <input type="number" id="NDCid" placeholder="مثال: 2653" required>
-
-  <button type="button" id="generate">🔮 توليد JSON</button>
+  <button type="button" id="addField">➕ أضف الحقل</button>
 </form>
 
-<h2>📦 الناتج (JSON)</h2>
-<pre id="output"></pre>
+<table id="fieldsTable">
+  <thead>
+    <tr><th>#</th><th>اسم الحقل</th><th>النوع</th><th>التسمية</th><th>القيم</th><th>إزالة</th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="output">
+  <button id="generate">🧾 توليد JSON النهائي</button>
+  <h2>📦 الناتج (Viewable_data3)</h2>
+  <pre id="output"></pre>
+</div>
 
 <script>
-document.getElementById('generate').addEventListener('click', () => {
-  const obj = {
-    ColumnsNameAdd: [
-      {
-        chekpointname: document.getElementById('chekpointname').value,
-        DriverName: document.getElementById('DriverName').value,
-        VehicleNumber: document.getElementById('VehicleNumber').value,
-        VehicleRegistrationGovernorate: document.getElementById('VehicleRegistrationGovernorate').value,
-        WeightQuantity: document.getElementById('WeightQuantity').value,
-        FinalDestinationGovernorate: document.getElementById('FinalDestinationGovernorate').value
-      }
-    ],
-    NDCid: Number(document.getElementById('NDCid').value)
-  };
+const fields = [];
 
-  // تحقق من تعبئة جميع الحقول
-  const values = Object.values(obj.ColumnsNameAdd[0]);
-  if (values.some(v => !v) || !obj.NDCid) {
-    alert("⚠️ يرجى تعبئة جميع الحقول المطلوبة قبل التوليد.");
+document.getElementById('addField').addEventListener('click', () => {
+  const name = document.getElementById('name').value.trim();
+  const type = document.getElementById('type').value;
+  const label = document.getElementById('label').value.trim();
+  const contentListRaw = document.getElementById('contentList').value.trim();
+
+  if (!name || !label) {
+    alert("⚠️ يرجى إدخال اسم الحقل والتسمية.");
     return;
   }
 
-  document.getElementById('output').textContent = JSON.stringify(obj, null, 2);
+  const contentList = contentListRaw ? contentListRaw.split(',').map(s => s.trim()) : [];
+
+  const field = {
+    ColumnName: name,
+    ColumnRequired: false,
+    ColumnType: type,
+    ContentList: contentList,
+    id: 100 + fields.length,
+    label: label
+  };
+
+  fields.push(field);
+  renderTable();
+  document.getElementById('fieldForm').reset();
+});
+
+function renderTable() {
+  const tbody = document.querySelector('#fieldsTable tbody');
+  tbody.innerHTML = "";
+  fields.forEach((f, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td>${f.ColumnName}</td>
+      <td>${f.ColumnType}</td>
+      <td>${f.label}</td>
+      <td>${f.ContentList.join(', ')}</td>
+      <td><button onclick="removeField(${i})">❌</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function removeField(index) {
+  fields.splice(index, 1);
+  renderTable();
+}
+
+document.getElementById('generate').addEventListener('click', () => {
+  if (!fields.length) {
+    alert("⚠️ لم تتم إضافة أي حقول بعد.");
+    return;
+  }
+  const json = { Viewable_data3: fields };
+  document.getElementById('output').textContent = JSON.stringify(json, null, 2);
 });
 </script>
 
