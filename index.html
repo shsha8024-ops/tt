@@ -1,163 +1,110 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🧮 مُولِّد Viewable_data3 (توليد مخطط الحقول)</title>
-<style>
-body {
-  font-family: "Noto Naskh Arabic", sans-serif;
-  direction: rtl;
-  background: #f9fafb;
-  color: #111;
-  margin: 20px;
-}
-h1{text-align:center;margin-bottom:20px}
-form, .output {
-  max-width: 900px;
-  margin: auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-label{display:block;margin-top:10px;font-weight:600}
-input,select,textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 6px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-  box-sizing: border-box;
-}
-button {
-  padding: 10px 14px;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  margin-top: 12px;
-  cursor: pointer;
-}
-button:hover {background:#1e40af}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
-th {background:#f3f4f6}
-pre {
-  background: #f5f5f5;
-  padding: 10px;
-  border-radius: 8px;
-  overflow: auto;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>تسجيل الدخول – Ghadeer Logistics Trans</title>
+  <style>
+    body { font-family: "Segoe UI","Cairo",sans-serif; background:#003366; color:#fff; padding:20px; text-align:center; }
+    nav a { margin:0 15px; color:#ffd700; font-weight:bold; text-decoration:none; font-size:18px; }
+    img.logo { width:220px; margin:20px auto; display:block; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.4); }
+    section { margin-top:30px; background:#fff; color:#003366; padding:20px; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,.2); text-align:right; max-width:520px; margin-left:auto; margin-right:auto; }
+    input, button { width:100%; padding:12px; font-size:16px; border-radius:10px; border:1px solid #ddd; margin-top:10px; box-sizing:border-box; }
+    button { background:#007bff; color:#fff; cursor:pointer; border:none; font-weight:bold; }
+    button:hover { background:#0b66d0; }
+    .row { display:flex; gap:10px; }
+    .row button { width:50%; }
+    .msg { margin-top:12px; font-size:16px; }
+    .ok { color:#0a7a2f; font-weight:bold; }
+    .bad { color:#b00020; font-weight:bold; }
+    .hint { font-size:13px; color:#555; margin-top:10px; line-height:1.6; }
+  </style>
 </head>
 <body>
 
-<h1>🧮 مُولّد الحقول Viewable_data3</h1>
+<nav>
+  <a href="index.html">🏠 الرئيسية</a>
+  <a href="about.html">📘 عن الشركة</a>
+  <a href="contact.html">📞 اتصل بنا</a>
+  <a href="track.html">📦 تعقب الشحنة</a>
+  <a href="login.html">🔐 تسجيل الدخول</a>
+</nav>
 
-<form id="fieldForm">
-  <label>🔹 اسم الحقل (ColumnName)</label>
-  <input type="text" id="name" placeholder="مثال: CompanyNameProject" required>
+<img src="your-logo.jpeg" alt="Ghadeer Logo" class="logo" />
 
-  <label>🔹 نوع الحقل (ColumnType)</label>
-  <select id="type">
-    <option value="text">text - نص</option>
-    <option value="number">number - رقم</option>
-    <option value="date">date - تاريخ</option>
-    <option value="dropdownlist">dropdownlist - قائمة منسدلة</option>
-  </select>
+<h1>🔐 تسجيل الدخول</h1>
 
-  <label>🔹 التسمية العربية (label)</label>
-  <input type="text" id="label" placeholder="مثال: اسم الشركة / المشروع" required>
+<section>
+  <label>📧 البريد الإلكتروني</label>
+  <input id="email" type="email" placeholder="example@mail.com" required />
 
-  <label>🔹 قيم القائمة (اختياري إذا كان النوع dropdownlist)</label>
-  <input type="text" id="contentList" placeholder="مثال: طن, عدد, لتر">
+  <label>🔒 كلمة المرور</label>
+  <input id="password" type="password" placeholder="********" required />
 
-  <button type="button" id="addField">➕ أضف الحقل</button>
-</form>
+  <div class="row">
+    <button onclick="login()">دخول</button>
+    <button onclick="register()" style="background:#28a745;">تسجيل جديد</button>
+  </div>
 
-<table id="fieldsTable">
-  <thead>
-    <tr><th>#</th><th>اسم الحقل</th><th>النوع</th><th>التسمية</th><th>القيم</th><th>إزالة</th></tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <div class="hint">
+    • إذا ما تريد تسجيل جديد للموظفين من هنا، احذف زر “تسجيل جديد” وخلي التسجيل من لوحة المدير فقط.<br>
+    • بعد الدخول يوديك تلقائيًا لصفحة الحسابات.
+  </div>
 
-<div class="output">
-  <button id="generate">🧾 توليد JSON النهائي</button>
-  <h2>📦 الناتج (Viewable_data3)</h2>
-  <pre id="output"></pre>
-</div>
+  <div id="msg" class="msg"></div>
+</section>
+
+<!-- Firebase (Compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
-const fields = [];
-
-document.getElementById('addField').addEventListener('click', () => {
-  const name = document.getElementById('name').value.trim();
-  const type = document.getElementById('type').value;
-  const label = document.getElementById('label').value.trim();
-  const contentListRaw = document.getElementById('contentList').value.trim();
-
-  if (!name || !label) {
-    alert("⚠️ يرجى إدخال اسم الحقل والتسمية.");
-    return;
-  }
-
-  const contentList = contentListRaw ? contentListRaw.split(',').map(s => s.trim()) : [];
-
-  const field = {
-    ColumnName: name,
-    ColumnRequired: false,
-    ColumnType: type,
-    ContentList: contentList,
-    id: 100 + fields.length,
-    label: label
+  // 🔥 بدّل القيم من Firebase Console > Project settings
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID"
   };
 
-  fields.push(field);
-  renderTable();
-  document.getElementById('fieldForm').reset();
-});
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-function renderTable() {
-  const tbody = document.querySelector('#fieldsTable tbody');
-  tbody.innerHTML = "";
-  fields.forEach((f, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${i+1}</td>
-      <td>${f.ColumnName}</td>
-      <td>${f.ColumnType}</td>
-      <td>${f.label}</td>
-      <td>${f.ContentList.join(', ')}</td>
-      <td><button onclick="removeField(${i})">❌</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function removeField(index) {
-  fields.splice(index, 1);
-  renderTable();
-}
-
-document.getElementById('generate').addEventListener('click', () => {
-  if (!fields.length) {
-    alert("⚠️ لم تتم إضافة أي حقول بعد.");
-    return;
+  const msgEl = document.getElementById("msg");
+  function showMsg(text, ok=false){
+    msgEl.className = "msg " + (ok ? "ok" : "bad");
+    msgEl.textContent = text;
   }
-  const json = { Viewable_data3: fields };
-  document.getElementById('output').textContent = JSON.stringify(json, null, 2);
-});
+
+  // لو مسجّل دخول من قبل، لا نضيّع وقته
+  auth.onAuthStateChanged(user => {
+    if (user) location.href = "accounts.html";
+  });
+
+  async function login(){
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if(!email || !password) return showMsg("❌ اكتب الإيميل والباسورد.");
+    try{
+      await auth.signInWithEmailAndPassword(email, password);
+      showMsg("✅ تم تسجيل الدخول… تحويل.", true);
+      location.href = "accounts.html";
+    }catch(err){
+      showMsg("❌ فشل الدخول: " + (err.message || err));
+    }
+  }
+
+  async function register(){
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if(!email || !password) return showMsg("❌ اكتب الإيميل والباسورد.");
+    if(password.length < 6) return showMsg("❌ كلمة المرور لازم 6 أحرف على الأقل.");
+    try{
+      await auth.createUserWithEmailAndPassword(email, password);
+      showMsg("✅ تم إنشاء الحساب… تحويل.", true);
+      location.href = "accounts.html";
+    }catch(err){
+      showMsg("❌ فشل التسجيل: " + (err.message || err));
+    }
+  }
 </script>
 
 </body>
